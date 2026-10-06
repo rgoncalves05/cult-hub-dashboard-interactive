@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Cult Hub Painel de Controle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: galeria de arte contemporânea. Azul (Cult Hub) e laranja (outras áreas) como duas formas que se sobrepõem; painéis planos, números grandes, formas geométricas como ornamento. */
+:root{
+  --bg:#F2F4F9; --panel:#FFFFFF; --panel2:#E9EDF5; --ink:#0E1526; --dim:#5A6479; --line:#D8DEEA;
+  --blue:#2457D6; --blue-soft:#DCE6FB; --org:#E2570F; --org-soft:#FCE3D3; --amber:#B7791F; --green:#198754; --zero:#EDF0F6;
+  --hb1:#CFE0F7; --hb2:#A9C5EC; --hb3:#7FA6DE; --hb4:#2F67BE; --hb5:#1B4690;
+  --ho1:#F9DDC0; --ho2:#F5C497; --ho3:#EBA46B; --ho4:#B5560F; --ho5:#7E3504;
+  --shadow:0 1px 0 rgba(14,21,38,.04),0 12px 30px -18px rgba(14,21,38,.25);
+  --f-display:'Bricolage Grotesque','Trebuchet MS',system-ui,sans-serif; --f-body:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif; --f-mono:'DM Mono',ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#080C18; --panel:#101728; --panel2:#18213A; --ink:#EAF0FB; --dim:#93A2BF; --line:#243050;
+  --blue:#6E9CFF; --blue-soft:#17294F; --org:#FF8A3D; --org-soft:#40230F; --amber:#F2C14E; --green:#4ADE9B; --zero:#161E34;
+  --shadow:0 12px 30px -18px rgba(0,0,0,.8); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#080C18; --panel:#101728; --panel2:#18213A; --ink:#EAF0FB; --dim:#93A2BF; --line:#243050;
+  --blue:#6E9CFF; --blue-soft:#17294F; --org:#FF8A3D; --org-soft:#40230F; --amber:#F2C14E; --green:#4ADE9B; --zero:#161E34;
+  --shadow:0 12px 30px -18px rgba(0,0,0,.8); color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;padding-inline:clamp(16px,4vw,48px);padding-block:0 64px;overflow-x:hidden}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1240px;margin-inline:auto}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.disp{font-family:var(--f-display)}
+
+/* header */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);margin-inline:calc(-1*clamp(16px,4vw,48px));padding:10px clamp(16px,4vw,48px);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:14px;justify-content:space-between}
+.brand{font-family:var(--f-display);font-weight:800;letter-spacing:-.02em;font-size:18px;display:flex;align-items:center;gap:10px;white-space:nowrap}
+.mark{width:26px;height:26px;position:relative;flex:none}
+.mark i{position:absolute;width:18px;height:18px;border-radius:50%}
+.mark i:first-child{background:var(--blue);left:0;top:0}
+.mark i:last-child{background:var(--org);right:0;bottom:0;mix-blend-mode:multiply}
+:root[data-theme="dark"] .mark i:last-child{mix-blend-mode:screen}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .mark i:last-child{mix-blend-mode:screen}}
+.tools{display:flex;gap:8px;align-items:center}
+.ghost{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:6px 12px;font-size:13px}
+nav.tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-top:10px}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{border:1px solid transparent;background:transparent;padding:7px 14px;border-radius:999px;font-weight:600;font-size:14px;color:var(--dim);white-space:nowrap}
+nav.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+nav.tabs button:not([aria-selected="true"]):hover{border-color:var(--line);color:var(--ink)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.3fr .7fr;gap:24px;align-items:center;padding-block:36px 8px}
+.hero h1{font-family:var(--f-display);font-weight:800;font-size:clamp(34px,6.2vw,72px);line-height:.98;letter-spacing:-.035em;margin:0 0 14px;text-wrap:balance}
+.hero h1 b{color:var(--blue)} .hero h1 em{font-style:normal;color:var(--org)}
+.hero p{margin:0;color:var(--dim);max-width:56ch;font-size:16px}
+.art{position:relative;aspect-ratio:1/.8;max-width:100%;min-width:0}
+.art span{position:absolute;border-radius:50%}
+.art .a{width:62%;aspect-ratio:1;background:var(--blue);left:4%;top:6%}
+.art .b{width:56%;aspect-ratio:1;background:var(--org);right:2%;bottom:2%;mix-blend-mode:multiply}
+:root[data-theme="dark"] .art .b{mix-blend-mode:screen}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .art .b{mix-blend-mode:screen}}
+.art .c{width:20%;aspect-ratio:1;border:2px solid var(--ink);right:10%;top:4%}
+.art .d{width:34%;height:6px;border-radius:3px;background:var(--ink);left:0;bottom:12%}
+.art .big{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:var(--f-display);font-weight:800;font-size:clamp(26px,4.4vw,52px);white-space:nowrap;color:#fff;mix-blend-mode:normal;letter-spacing:-.04em;text-shadow:0 2px 20px rgba(0,0,0,.25)}
+@media (max-width:760px){.hero{grid-template-columns:1fr}.art{max-width:300px}}
+
+/* sections */
+section.view{padding-block:20px}
+section.view[hidden]{display:none}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(12,minmax(0,1fr))}
+.col4{grid-column:span 4}.col5{grid-column:span 5}.col6{grid-column:span 6}.col7{grid-column:span 7}.col8{grid-column:span 8}.col12{grid-column:span 12}
+@media (max-width:980px){.col4,.col5,.col6,.col7,.col8{grid-column:span 12}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow);min-width:0}
+.card h2{font-family:var(--f-display);font-size:20px;letter-spacing:-.02em;margin:0 0 4px;font-weight:700}
+.card .sub{color:var(--dim);font-size:13px;margin:0 0 16px}
+.lbl{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);font-weight:600}
+
+/* kpis */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px;position:relative;overflow:hidden;min-width:0}
+.kpi .v{font-family:var(--f-display);font-weight:800;font-size:clamp(24px,2.5vw,32px);letter-spacing:-.03em;line-height:1.05;margin-top:6px;white-space:nowrap}
+.kpi .s{font-size:12px;color:var(--dim);margin-top:4px}
+.kpi::after{content:"";position:absolute;right:-18px;top:-18px;width:56px;height:56px;border-radius:50%;background:var(--k,var(--blue));opacity:.16}
+.kpi.b{--k:var(--blue)}.kpi.o{--k:var(--org)}.kpi.g{--k:var(--green)}.kpi.a{--k:var(--amber)}
+
+/* bars */
+.rows{display:flex;flex-direction:column;gap:6px}
+.row{display:grid;grid-template-columns:minmax(92px,150px) 1fr auto;gap:10px;align-items:center;border:0;background:none;text-align:left;padding:4px 6px;border-radius:10px;width:100%}
+.row:hover,.row.on{background:var(--panel2)}
+.row .n{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.track{height:14px;background:var(--zero);border-radius:7px;overflow:hidden;display:flex;position:relative}
+.seg{height:100%}
+.seg.b{background:var(--blue)}.seg.o{background:var(--org)}
+.row .val{font-size:12px;color:var(--dim);min-width:64px;text-align:right;white-space:nowrap}
+.row .val b{color:var(--ink);font-weight:500}
+.broken::after{content:"";position:absolute;right:18px;top:-2px;bottom:-2px;width:5px;background:var(--panel);transform:skewX(-20deg)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--dim);margin-top:12px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+
+/* split donut-ish */
+.split{display:flex;height:34px;border-radius:12px;overflow:hidden;margin:6px 0 12px}
+.split div{display:flex;align-items:center;padding-inline:10px;font-family:var(--f-mono);font-size:12px;color:#fff;white-space:nowrap;overflow:hidden}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chip{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:500}
+.chip[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+.chip.org[aria-pressed="true"]{background:var(--org);border-color:var(--org)}
+select,input[type=search]{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:7px 10px;min-width:0;max-width:100%}
+.ctrl{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.ctrl label{font-size:12px;color:var(--dim)}
+
+/* timeline */
+.months{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.month{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;min-width:0}
+.month h3{margin:0 0 10px;font-family:var(--f-display);font-weight:800;font-size:44px;letter-spacing:-.04em;line-height:1;color:transparent;-webkit-text-stroke:1.5px var(--ink)}
+.yr{display:flex;align-items:center;gap:8px;margin:12px 0 6px;font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--dim)}
+.yr::after{content:"";flex:1;height:1px;background:var(--line)}
+.ev{display:grid;grid-template-columns:14px 1fr;gap:10px;width:100%;text-align:left;border:0;background:none;padding:7px 6px;border-radius:12px;align-items:start}
+.ev:hover{background:var(--panel2)}
+.dot{width:12px;height:12px;border-radius:50%;margin-top:5px;flex:none}
+.ev .t{font-weight:600;font-size:14px;line-height:1.25}
+.ev .m{font-size:12px;color:var(--dim);display:flex;gap:6px;flex-wrap:wrap;margin-top:3px;align-items:center}
+.tag{font-family:var(--f-mono);font-size:11px;padding:1px 7px;border-radius:999px;border:1px solid var(--line);white-space:nowrap}
+.tag.gift{background:var(--org-soft);border-color:transparent;color:var(--org)}
+.tag.q{background:var(--blue-soft);border-color:transparent;color:var(--blue)}
+.empty{color:var(--dim);font-size:13px;padding:6px}
+
+/* heat */
+.scroll{overflow-x:auto;border-radius:12px}
+table{border-collapse:separate;border-spacing:2px;width:100%}
+th,td{font-size:13px;text-align:center;padding:0}
+th.h{font-size:11px;font-weight:600;padding:4px;line-height:1.15;vertical-align:bottom;min-width:54px}
+th.h.ch{color:var(--blue)} th.h.ot{color:var(--org)}
+th.r,td.r{text-align:left;position:sticky;left:0;background:var(--panel);z-index:2;padding:0 10px 0 0;min-width:150px;white-space:nowrap;font-weight:500}
+td.c{height:32px;min-width:54px;border-radius:6px;font-family:var(--f-mono);font-size:12px;cursor:pointer;background:var(--zero);color:var(--dim)}
+td.c:hover{outline:2px solid var(--ink);outline-offset:-2px}
+td.c.dim{opacity:.18}
+td.sum{font-family:var(--f-mono);font-size:12px;font-weight:500;background:var(--panel2);border-radius:6px}
+th.h button{border:0;background:none;font:inherit;color:inherit;cursor:pointer;padding:4px;border-radius:6px}
+th.h button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+td.c.b1{background:var(--hb1);color:#0E1526}td.c.b2{background:var(--hb2);color:#0E1526}td.c.b3{background:var(--hb3);color:#0E1526}td.c.b4{background:var(--hb4);color:#fff}td.c.b5{background:var(--hb5);color:#fff}
+td.c.o1{background:var(--ho1);color:#0E1526}td.c.o2{background:var(--ho2);color:#0E1526}td.c.o3{background:var(--ho3);color:#0E1526}td.c.o4{background:var(--ho4);color:#fff}td.c.o5{background:var(--ho5);color:#fff}
+.scale{display:flex;gap:14px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--dim);margin-top:12px}
+.sw{display:inline-flex;gap:0}.sw i{width:16px;height:16px;display:block}
+
+/* action table */
+table.act{border-spacing:0}
+table.act th{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);text-align:right;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap;font-weight:600}
+table.act th:first-child,table.act td:first-child{text-align:left}
+table.act th button{border:0;background:none;font:inherit;text-transform:inherit;letter-spacing:inherit;color:inherit;font-weight:inherit;padding:0}
+table.act td{text-align:right;padding:9px 10px;border-bottom:1px solid var(--line);font-family:var(--f-mono);font-size:13px;white-space:nowrap}
+table.act td:first-child{font-family:var(--f-body);font-size:14px;font-weight:600;white-space:normal;min-width:190px}
+table.act tr.click{cursor:pointer}table.act tr.click:hover td{background:var(--panel2)}
+.na{color:var(--dim);font-style:italic;font-family:var(--f-body)!important;font-size:12px!important}
+
+/* insights */
+.insight{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+.insight:first-of-type{border-top:0}
+.insight .bd{width:10px;height:10px;border-radius:50%;margin-top:6px}
+.insight b{font-weight:600}.insight span{display:block;color:var(--dim);font-size:13px}
+
+/* drawer */
+.scrim{position:fixed;inset:0;background:rgba(5,8,18,.5);z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+.scrim.on{opacity:1;pointer-events:auto}
+aside.drawer{position:fixed;z-index:50;background:var(--panel);border:1px solid var(--line);box-shadow:0 30px 80px -20px rgba(0,0,0,.5);overflow-y:auto;transition:transform .25s ease,visibility .25s;visibility:hidden;
+  top:0;right:0;bottom:0;width:min(440px,100%);transform:translateX(105%);padding:22px 20px calc(24px + env(safe-area-inset-bottom,0px))}
+aside.drawer.on{transform:none;visibility:visible}
+@media (max-width:700px){aside.drawer{top:auto;left:0;right:0;width:100%;max-height:86%;border-radius:22px 22px 0 0;transform:translateY(105%)}}
+.dh{display:flex;justify-content:space-between;gap:12px;align-items:start}
+.dh h2{font-family:var(--f-display);font-size:26px;line-height:1.05;letter-spacing:-.03em;margin:4px 0 12px;font-weight:800}
+.x{border:1px solid var(--line);background:var(--panel2);border-radius:50%;width:34px;height:34px;flex:none}
+.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0 18px}
+.fact{background:var(--panel2);border-radius:12px;padding:10px 12px}
+.fact .v{font-family:var(--f-display);font-weight:800;font-size:22px;letter-spacing:-.02em;margin-top:2px}
+.fact .v small{font-size:12px;font-weight:500;color:var(--dim);font-family:var(--f-body)}
+.foot{margin-top:28px;color:var(--dim);font-size:12px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<style>html{color-scheme:light}body{margin:0}</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="bar">
+    <div class="brand"><span class="mark" aria-hidden="true"><i></i><i></i></span>Cult Hub</div>
+    <div class="tools"><span class="lbl" style="display:none" id="hdrnote"></span><button class="ghost" id="theme" type="button" aria-label="Alternar tema claro e escuro">Tema</button></div>
+  </div>
+  <nav class="tabs" role="tablist" aria-label="Seções do painel" id="tabs"></nav>
+</header>
+
+<div class="hero">
+  <div>
+    <div class="lbl">Painel de controle · ações de 2025 e 2026</div>
+    <h1>Cada hora do <b>Cult Hub</b> mobiliza <em>1,43 h</em> em outras áreas.</h1>
+    <p>Eventos, horas de trabalho por área, quórum e brindes das 21 ações no radar. Toque em qualquer ação, área ou célula para ver o detalhe.</p>
+  </div>
+  <div class="art" aria-hidden="true"><span class="a"></span><span class="b"></span><span class="c"></span><span class="d"></span><div class="big">1.098 h</div></div>
+</div>
+
+<main id="main"></main>
+<p class="foot">Teste de painel. Fontes: planilha de horas por ação 2026, planilha de ações (datas, quórum, brindes) e 2º Comitê Executivo (16/dez/25) para 2025. A ordem das linhas da planilha de horas segue a planilha de ações (suposição a confirmar). Horas não equivalem a custo. "Dado a fornecer" = ainda não coletado.</p>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Detalhe"></aside>
+
+<script>
+const AREAS=['Cult Hub','Hub (Mkt)','Hub (Fin)','Hub (Inov)','Comun. Instit.','Lab. Cidades','Infraestr.','Student Life','RH','Alumni','Prog. Bolsas','Compras'];
+const H=[[50,0,8,0,35,75,5,12,0,0,0,3],[32,8,2,0,25,0,0,0,0,0,0,1],[72,60,10,4,16,0,0,0,16,0,0,1],[16,8,6,0,4,0,0,0,0,0,0,1],[40,12,3,0,13,0,2,0,0,0,0,3],[40,25,3,0,17,0,0,0,0,16,0,2],[10,0,4,0,3,0,0,0,0,0,0,1],[16,4,4,0,23,0,0,0,0,0,0,1],[20,4,2,0,3,0,1,0,0,0,0,1],[24,0,1,0,1,0,0,0,0,0,0,2],[24,10,2,0,13,0,0,0,0,0,0,0],[44,30,2,0,19,0,0,0,0,0,0,1],[4,4,0,0,0,0,0,0,0,0,4,0],[40,0,8,96,0,0,0,0,0,0,0,0],[8,0,0,0,0,0,2,0,0,0,2,0],[12,0,0,0,2,0,0,0,0,0,0,0]];
+const E=[
+{n:1,name:'Arte Urbana',short:'Arte Urbana',date:'06–09/04',mes:'abr',q:43,b:43},
+{n:2,name:'Ida ao MIS (Janis Joplin)',short:'Ida ao MIS',date:'24/04',mes:'abr',q:14,b:14},
+{n:3,name:'Ida de Docentes à Osesp',short:'Docentes à Osesp',date:'14/05',mes:'mai',q:61,b:61},
+{n:4,name:'Ativação Frankenstein (MIS)',short:'Frankenstein (MIS)',date:'18/05',mes:'mai',q:null,b:0},
+{n:5,name:'Exposição Cartazes MIS',short:'Cartazes MIS',date:'18/05–12/06',mes:'mai',q:15440,b:0},
+{n:6,name:'Show Líricos Oníricos (Bona)',short:'Líricos Oníricos',date:'17/06',mes:'jun',q:60,b:0},
+{n:7,name:'Ativação Flautista (RapoTalk)',short:'Ativação Flautista',date:'12/08',mes:'ago',q:null,b:0},
+{n:8,name:'Início Guia Cultural RapoTalk',short:'Início Guia Cultural',date:'12/08',mes:'ago',q:null,b:0},
+{n:9,name:'Ativação Quarteto Cordas (Osesp)',short:'Quarteto Cordas',date:'18/08',mes:'ago',q:null,b:0},
+{n:10,name:'Vídeo Arte Urbana',short:'Vídeo Arte Urbana',date:'25/08',mes:'ago',q:null,b:0},
+{n:11,name:'Peça Édipo MASP',short:'Peça Édipo MASP',date:'30/08',mes:'ago',q:56,b:0},
+{n:12,name:'Ida alunos à Osesp',short:'Ida alunos à Osesp',date:'04/09',mes:'set',q:81,b:81},
+{n:13,name:'Workshop Escuta Toca da Raposa',short:'Workshop Toca',date:'09/09',mes:'set',q:13,b:13},
+{n:14,name:'Projeto Inovação Aberta (Osesp)',short:'Inov. Aberta Osesp',date:null,mes:'em curso',q:null,b:null},
+{n:15,name:'Intervenção Arte Toca da Raposa',short:'Interv. Arte Toca',date:null,mes:'em curso',q:null,b:null},
+{n:16,name:'Quadro para Caixa Fundraising',short:'Quadro Fundraising',date:null,mes:'em curso',q:null,b:null}];
+E.forEach((e,i)=>{e.h=H[i];e.ch=H[i][0];e.sup=H[i].slice(1).reduce((a,b)=>a+b,0);e.tot=e.ch+e.sup;e.ratio=e.sup/e.ch;e.hpp=e.q?e.tot/e.q:null;});
+const E25=[{name:'Palestra da Bienal',mes:'ago'},{name:'Palestra do Itaú Cultural',mes:'set'},{name:'Instalação Ultra-Nature',mes:'set'},{name:'Visita guiada à Bienal',mes:'set'},{name:'Café com Cultura',mes:'nov'}];
+const MESES=['abr','mai','jun','jul','ago','set','out','nov'];
+const T={ch:E.reduce((a,e)=>a+e.ch,0),sup:E.reduce((a,e)=>a+e.sup,0)};T.tot=T.ch+T.sup;
+const aTot=AREAS.map((_,j)=>E.reduce((a,e)=>a+e.h[j],0));
+const aEv=AREAS.map((_,j)=>E.filter(e=>e.h[j]>0).length);
+const Q=E.filter(e=>e.q!=null);const Qsum=Q.reduce((a,e)=>a+e.q,0);
+const Bev=E.filter(e=>e.b>0);const Bsum=Bev.reduce((a,e)=>a+e.b,0);
+const f=n=>n.toLocaleString('pt-BR');const d1=n=>n.toFixed(1).replace('.',',');const d2=n=>n.toFixed(2).replace('.',',');
+const $=s=>document.querySelector(s);
+const ev=(n)=>E[n-1];
+
+/* ---------- tabs ---------- */
+const TABS=[['resumo','Resumo'],['tempo','Linha do tempo'],['horas','Horas'],['mapa','Mapa de calor'],['acoes','Ações']];
+let tab='resumo';
+const tabsEl=$('#tabs'),main=$('#main');
+TABS.forEach(([id,l])=>{const b=document.createElement('button');b.type='button';b.role='tab';b.textContent=l;b.dataset.id=id;b.onclick=()=>show(id);tabsEl.appendChild(b);});
+function show(id){tab=id;tabsEl.querySelectorAll('button').forEach(b=>b.setAttribute('aria-selected',b.dataset.id===id));main.querySelectorAll('section.view').forEach(s=>s.hidden=s.id!=='v-'+id);}
+
+/* ---------- resumo ---------- */
+function rowBar(name,segs,val,attrs=''){return `<button class="row" ${attrs}><span class="n">${name}</span><span class="track">${segs}</span><span class="val num">${val}</span></button>`;}
+function resumo(){
+  const maxA=aTot[0];
+  const areaRows=AREAS.map((a,j)=>({a,j,v:aTot[j]})).sort((x,y)=>y.v-x.v).map(o=>rowBar(o.a,`<span class="seg ${o.j?'o':'b'}" style="width:${o.v/maxA*100}%"></span>`,`<b>${f(o.v)}</b> h`,`data-area="${o.j}"`)).join('');
+  const maxOth=Math.max(...Q.filter(e=>e.n!==5).map(e=>e.q));
+  const qRows=[...Q].sort((a,b)=>b.q-a.q).map(e=>{const br=e.q>maxOth*1.2;const w=br?100:e.q/maxOth*100;const gb=e.b>0?e.b/ (br?maxOth:maxOth)*100:0;
+    return `<button class="row" data-ev="${e.n}"><span class="n">${e.short}</span><span class="track ${br?'broken':''}"><span class="seg b" style="width:${w}%"></span></span><span class="val num"><b>${f(e.q)}</b>${e.b>0?` · <span style="color:var(--org)">${f(e.b)} br.</span>`:''}</span></button>`}).join('');
+  const hub=aTot[1]+aTot[2]+aTot[3];
+  return `<section class="view" id="v-resumo">
+  <div class="kpis">
+    <div class="kpi"><div class="lbl">Ações no radar</div><div class="v">21</div><div class="s">5 em 2025 · 16 em 2026</div></div>
+    <div class="kpi"><div class="lbl">Horas totais</div><div class="v">${f(T.tot)} h</div><div class="s">16 ações de 2026</div></div>
+    <div class="kpi b"><div class="lbl">Cult Hub</div><div class="v" style="color:var(--blue)">${T.ch} h</div><div class="s">${Math.round(T.ch/T.tot*100)}% das horas</div></div>
+    <div class="kpi o"><div class="lbl">Outras áreas</div><div class="v" style="color:var(--org)">${T.sup} h</div><div class="s">${Math.round(T.sup/T.tot*100)}% das horas</div></div>
+    <div class="kpi a"><div class="lbl">Alavancagem</div><div class="v">${d2(T.sup/T.ch)}×</div><div class="s">h de apoio por 1 h do Hub</div></div>
+    <div class="kpi g"><div class="lbl">Quórum informado</div><div class="v">${f(Qsum)}</div><div class="s">${Q.length} de 13 ações datadas</div></div>
+    <div class="kpi o"><div class="lbl">Brindes distribuídos</div><div class="v">${f(Bsum)}</div><div class="s">em ${Bev.length} ações</div></div>
+  </div>
+  <div class="grid" style="margin-top:16px">
+    <div class="card col5"><h2>Horas por área</h2><p class="sub">Toque em uma área para ver onde ela atuou.</p><div class="rows">${areaRows}</div>
+      <div class="legend"><span><i style="background:var(--blue)"></i>Cult Hub</span><span><i style="background:var(--org)"></i>Outras áreas</span></div></div>
+    <div class="card col7"><h2>Quem dedica as horas</h2><p class="sub">Divisão das ${f(T.tot)} h entre o organizador e as áreas de apoio.</p>
+      <div class="split"><div style="background:var(--blue);width:${aTot[0]/T.tot*100}%">Cult Hub ${aTot[0]} h</div><div style="background:var(--org);width:${hub/T.tot*100}%">Hub Mkt/Fin/Inov ${hub} h</div><div style="background:#B5560F;width:${(T.tot-aTot[0]-hub)/T.tot*100}%">Demais ${T.tot-aTot[0]-hub} h</div></div>
+      <div class="lbl" style="margin:18px 0 8px">Quórum e brindes por ação</div><div class="rows">${qRows}</div>
+      <p class="sub" style="margin:10px 0 0">Cartazes MIS (15.440) está com a barra cortada: ocupa a escala inteira. "br." = brindes distribuídos.</p></div>
+    <div class="card col6"><h2>Brindes</h2><p class="sub">Cada brinde distribuído corresponde a um participante nas ações em que houve distribuição.</p>
+      <div class="kpis" style="grid-template-columns:repeat(auto-fit,minmax(120px,1fr))"><div class="kpi o"><div class="lbl">Total</div><div class="v">${Bsum}</div></div><div class="kpi"><div class="lbl">Ações com brinde</div><div class="v">${Bev.length}</div><div class="s">de 13 datadas</div></div><div class="kpi"><div class="lbl">Cobertura</div><div class="v">100%</div><div class="s">dos presentes nelas</div></div></div>
+      <div style="margin-top:12px">${Bev.map(e=>`<button class="row" data-ev="${e.n}" style="grid-template-columns:1fr auto"><span class="n">${e.short}</span><span class="val num"><b>${e.b}</b> brindes</span></button>`).join('')}</div></div>
+    <div class="card col6"><h2>Pontos de atenção</h2><p class="sub">O que pede decisão ou dado.</p>
+      <div class="insight"><i class="bd" style="background:var(--amber)"></i><div><b>3 ações sem data</b><span>Inov. Aberta Osesp, Interv. Arte Toca e Quadro Fundraising estão "em curso".</span></div></div>
+      <div class="insight"><i class="bd" style="background:var(--amber)"></i><div><b>Quórum ausente em 5 ações</b><span>Frankenstein, Flautista, Guia Cultural, Quarteto de Cordas e Vídeo Arte Urbana: dado a fornecer.</span></div></div>
+      <div class="insight"><i class="bd" style="background:var(--org)"></i><div><b>Quórum sem brinde em 3 ações</b><span>Cartazes MIS (15.440), Líricos Oníricos (60) e Édipo MASP (56).</span></div></div>
+      <div class="insight"><i class="bd" style="background:var(--org)"></i><div><b>Concentração de horas</b><span>Hub (Inov): 96 de 100 h em uma ação. Lab. Cidades: 75 h em uma ação. Hub (Mkt): 115 de 165 h em três ações.</span></div></div>
+      <div class="insight"><i class="bd" style="background:var(--blue)"></i><div><b>Ordem da planilha de horas</b><span>Suposição a confirmar: linhas na mesma ordem da planilha de ações.</span></div></div>
+      <div class="insight"><i class="bd" style="background:var(--dim)"></i><div><b>Custo e satisfação</b><span>Dado a fornecer.</span></div></div></div>
+  </div></section>`;}
+
+/* ---------- timeline ---------- */
+function evItem(e,k){const col=k===25?'var(--blue)':'var(--org)';
+  if(k===25)return `<div class="ev" style="cursor:default"><i class="dot" style="background:${col}"></i><div><div class="t">${e.name}</div><div class="m"><span class="tag">${e.mes}/25</span><span class="tag">quórum: dado a fornecer</span></div></div></div>`;
+  return `<button class="ev" data-ev="${e.n}"><i class="dot" style="background:${col}"></i><div><div class="t">${e.short}</div><div class="m"><span class="tag">${e.date}</span>${e.q!=null?`<span class="tag q">${f(e.q)} pessoas</span>`:''}${e.b>0?`<span class="tag gift">${e.b} brindes</span>`:''}</div></div></button>`;}
+function tempo(){
+  const cards=MESES.map(m=>{const a=E25.filter(e=>e.mes===m),b=E.filter(e=>e.mes===m||(m==='mai'&&0));
+    return `<div class="month" data-m="${m}"><h3>${m}</h3><div class="yr">2025</div>${a.length?a.map(e=>evItem(e,25)).join(''):'<div class="empty">sem ações</div>'}<div class="yr">2026</div>${b.length?b.map(e=>evItem(e,26)).join(''):'<div class="empty">sem ações</div>'}</div>`}).join('');
+  const und=E.filter(e=>!e.date);
+  return `<section class="view" id="v-tempo"><div class="card" style="margin-bottom:16px"><h2>Linha do tempo</h2><p class="sub">Meses compartilhados entre 2025 (azul) e 2026 (laranja). Em 2025 só há o mês, vindo do 2º Comitê Executivo. Em 2026 as datas vêm da planilha de ações.</p><div class="legend" style="margin:0"><span><i style="background:var(--blue)"></i>2025 · 5 eventos</span><span><i style="background:var(--org)"></i>2026 · 13 com data</span></div></div>
+  <div class="months">${cards}<div class="month"><h3 style="font-size:30px;-webkit-text-stroke-width:1.2px">sem data</h3><div class="yr">em curso · 2026</div>${und.map(e=>evItem(e,26)).join('')}</div></div></section>`;}
+
+/* ---------- horas ---------- */
+let sortBy='ordem';
+function horas(){
+  return `<section class="view" id="v-horas"><div class="grid">
+  <div class="card col8"><h2>Horas por evento</h2><p class="sub">Azul: Cult Hub. Laranja: outras áreas. Toque numa linha para abrir a ação.</p>
+    <div class="ctrl"><label for="sort">Ordenar por</label><select id="sort"><option value="ordem">Ordem da planilha</option><option value="tot">Horas totais</option><option value="sup">Horas das outras áreas</option><option value="ratio">Alavancagem (× Cult Hub)</option><option value="q">Quórum</option></select></div>
+    <div class="rows" id="evbars"></div><div class="legend"><span><i style="background:var(--blue)"></i>Cult Hub</span><span><i style="background:var(--org)"></i>Outras áreas</span><span>× = horas das outras áreas ÷ horas do Cult Hub</span></div></div>
+  <div class="card col4"><h2>Áreas, lado a lado</h2><p class="sub">Horas, tamanho frente ao Cult Hub (452 h) e número de ações.</p>
+    <div class="scroll"><table class="act" style="min-width:290px"><thead><tr><th>Área</th><th>h</th><th>× CH</th><th>Ações</th></tr></thead><tbody>${AREAS.map((a,j)=>({a,j})).sort((x,y)=>aTot[y.j]-aTot[x.j]).map(o=>`<tr class="click" data-area="${o.j}"><td>${o.a}</td><td>${aTot[o.j]}</td><td>${o.j?d2(aTot[o.j]/aTot[0])+'×':'—'}</td><td>${aEv[o.j]}</td></tr>`).join('')}</tbody></table></div>
+    <p class="sub" style="margin-top:12px">Áreas do Hub (Mkt, Fin, Inov): 320 h · Demais áreas: 326 h.</p></div>
+  </div></section>`;}
+function drawEvBars(){
+  const mx=Math.max(...E.map(e=>e.tot));let L=[...E];
+  if(sortBy!=='ordem')L.sort((a,b)=>(b[sortBy]??-1)-(a[sortBy]??-1));
+  $('#evbars').innerHTML=L.map(e=>`<button class="row" data-ev="${e.n}" style="grid-template-columns:minmax(92px,150px) 1fr auto"><span class="n">${e.short}</span><span class="track"><span class="seg b" style="width:${e.ch/mx*100}%"></span><span class="seg o" style="width:${e.sup/mx*100}%"></span></span><span class="val num" style="min-width:120px"><b>${e.ch}+${e.sup}</b> · ${d1(e.ratio)}×</span></button>`).join('');
+  bindDrill($('#evbars'));
+}
+
+/* ---------- heatmap ---------- */
+let hArea=-1,hMode='h';
+const bin=v=>v<=4?1:v<=12?2:v<=30?3:v<=60?4:5;
+function mapa(){
+  const head=AREAS.map((a,j)=>`<th class="h ${j?'ot':'ch'}"><button type="button" data-ha="${j}" aria-pressed="false" title="Destacar coluna">${a}</button></th>`).join('');
+  return `<section class="view" id="v-mapa"><div class="card"><h2>Mapa de calor: horas por área e ação</h2><p class="sub">Toque numa célula para abrir a ação. Toque no nome de uma área para destacar a coluna.</p>
+    <div class="ctrl"><label for="hm">Valores</label><select id="hm"><option value="h">Horas</option><option value="p">% das horas da ação</option></select><button class="ghost" type="button" id="hclr">Limpar destaque</button></div>
+    <div class="scroll"><table id="heat" style="min-width:820px"><thead><tr><th class="r"></th>${head}<th class="h">Outras áreas</th><th class="h">Total</th></tr></thead><tbody id="hb"></tbody></table></div>
+    <div class="scale"><span>Faixas de horas</span>${[['1–4',1],['5–12',2],['13–30',3],['31–60',4],['61–96',5]].map(([l,k])=>`<span><span class="sw"><i style="background:var(--hb${k})"></i><i style="background:var(--ho${k})"></i></span> ${l} h</span>`).join('')}<span>Azul: Cult Hub · Laranja: outras áreas · Cinza: 0 h</span></div>
+    <div style="margin-top:16px"><div class="insight"><i class="bd" style="background:var(--org)"></i><div><b>Lab. Cidades (75 h)</b><span>atua só em Arte Urbana.</span></div></div><div class="insight"><i class="bd" style="background:var(--org)"></i><div><b>Hub (Inov)</b><span>96 de suas 100 h estão no Projeto Inovação Aberta (Osesp).</span></div></div><div class="insight"><i class="bd" style="background:var(--org)"></i><div><b>Hub (Mkt)</b><span>115 de 165 h em três ações: Docentes à Osesp, Ida alunos à Osesp e Líricos Oníricos.</span></div></div></div></div></section>`;}
+function drawHeat(){
+  $('#hb').innerHTML=E.map(e=>{const cells=e.h.map((v,j)=>{const dim=hArea>=0&&hArea!==j?' dim':'';
+    if(!v)return `<td class="c${dim}" data-ev="${e.n}" data-j="${j}" title="${e.short} · ${AREAS[j]}: 0 h">–</td>`;
+    const b=bin(v);const cls=(j?'o':'b')+b;const txt=hMode==='h'?v:Math.round(v/e.tot*100)+'%';
+    return `<td class="c ${cls}${dim}" data-ev="${e.n}" data-j="${j}" title="${e.short} · ${AREAS[j]}: ${v} h (${Math.round(v/e.tot*100)}% da ação)">${txt}</td>`}).join('');
+    return `<tr><th class="r">${e.short}</th>${cells}<td class="sum">${hMode==='h'?e.sup:Math.round(e.sup/e.tot*100)+'%'}</td><td class="sum">${e.tot}</td></tr>`}).join('')+
+    `<tr><th class="r"><b>Total</b></th>${aTot.map((v,j)=>`<td class="sum${hArea>=0&&hArea!==j?' dim':''}" style="${j?'color:var(--org)':'color:var(--blue)'}">${v}</td>`).join('')}<td class="sum" style="color:var(--org)">${T.sup}</td><td class="sum">${f(T.tot)}</td></tr>`;
+  document.querySelectorAll('[data-ha]').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.ha===hArea));
+  bindDrill($('#hb'));
+}
+
+/* ---------- acoes ---------- */
+let fil='todas',q='',sk='n',sd=1;
+function acoes(){
+  return `<section class="view" id="v-acoes"><div class="card"><h2>Todas as ações</h2><p class="sub">Datas, quórum, brindes e horas lado a lado. Toque no cabeçalho para ordenar e numa linha para o detalhe.</p>
+  <div class="chips" id="chips">${[['todas','Todas'],['brinde','Com brinde'],['sembrinde','Sem brinde'],['quorum','Com quórum'],['semq','Sem quórum'],['semdata','Sem data']].map(([k,l])=>`<button class="chip ${k==='brinde'||k==='sembrinde'?'org':''}" type="button" data-f="${k}" aria-pressed="${k==='todas'}">${l}</button>`).join('')}</div>
+  <div class="ctrl"><label for="srch">Buscar</label><input type="search" id="srch" placeholder="nome da ação"></div>
+  <div class="scroll"><table class="act" style="min-width:860px"><thead><tr>${[['n','#'],['name','Ação'],['date','Data'],['q','Quórum'],['b','Brindes'],['ch','h Hub'],['sup','h apoio'],['tot','h total'],['ratio','×'],['hpp','h / pessoa']].map(([k,l])=>k==='n'?'':`<th><button type="button" data-s="${k}">${l}</button></th>`).join('')}</tr></thead><tbody id="ab"></tbody></table></div>
+  <p class="sub" id="acount" style="margin-top:12px"></p></div></section>`;}
+function drawAct(){
+  let L=E.filter(e=>{if(q&&!e.name.toLowerCase().includes(q))return false;
+    return fil==='todas'||(fil==='brinde'&&e.b>0)||(fil==='sembrinde'&&e.b===0)||(fil==='quorum'&&e.q!=null)||(fil==='semq'&&e.q==null&&e.date)||(fil==='semdata'&&!e.date)});
+  const key=sk==='name'?'name':sk;L.sort((a,b)=>{const x=a[key],y=b[key];if(x==null&&y==null)return 0;if(x==null)return 1;if(y==null)return -1;return (typeof x==='string'?x.localeCompare(y):x-y)*sd});
+  const na='<span class="na">dado a fornecer</span>';
+  $('#ab').innerHTML=L.map(e=>`<tr class="click" data-ev="${e.n}"><td>${e.name}</td><td>${e.date?e.date:'<span class="na">em curso</span>'}</td><td>${e.q!=null?f(e.q):na}</td><td>${e.b==null?na:e.b}</td><td>${e.ch}</td><td>${e.sup}</td><td>${e.tot}</td><td>${d1(e.ratio)}×</td><td>${e.hpp==null?na:(e.hpp<0.01?'<0,01':d1(e.hpp))}</td></tr>`).join('')||'<tr><td colspan="9" class="na">Nenhuma ação com esse filtro.</td></tr>';
+  $('#acount').textContent=L.length+' de 16 ações de 2026';
+  bindDrill($('#ab'));
+}
+
+/* ---------- drawer ---------- */
+const dr=$('#drawer'),sc=$('#scrim');let lastFocus=null;
+function openDr(html){lastFocus=document.activeElement;dr.innerHTML=html;dr.classList.add('on');sc.classList.add('on');dr.querySelector('.x').onclick=closeDr;bindDrill(dr);dr.querySelector('.x').focus();dr.scrollTop=0;}
+function closeDr(){dr.classList.remove('on');sc.classList.remove('on');if(lastFocus)lastFocus.focus();}
+sc.onclick=closeDr;document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDr()});
+function evDetail(n,hl){const e=ev(n);const na='<small>dado a fornecer</small>';
+  const rank=[...E].sort((a,b)=>b.tot-a.tot).findIndex(x=>x.n===n)+1;
+  const parts=AREAS.map((a,j)=>({a,j,v:e.h[j]})).filter(o=>o.v>0).sort((x,y)=>y.v-x.v);
+  openDr(`<div class="dh"><div><div class="lbl">Ação ${e.n} de 16 · ${e.date?e.date+' de 2026':'em curso'}</div><h2>${e.name}</h2></div><button class="x" type="button" aria-label="Fechar">✕</button></div>
+  <div class="facts">
+   <div class="fact"><div class="lbl">Quórum</div><div class="v">${e.q!=null?f(e.q):na}</div></div>
+   <div class="fact"><div class="lbl">Brindes</div><div class="v">${e.b==null?na:f(e.b)}${e.b>0&&e.q?` <small>· ${Math.round(e.b/e.q*100)}% dos presentes</small>`:''}</div></div>
+   <div class="fact"><div class="lbl">Horas totais</div><div class="v">${e.tot} h <small>· ${rank}ª de 16</small></div></div>
+   <div class="fact"><div class="lbl">Alavancagem</div><div class="v">${d1(e.ratio)}× <small>apoio ÷ Hub</small></div></div>
+   <div class="fact"><div class="lbl">Cult Hub</div><div class="v" style="color:var(--blue)">${e.ch} h</div></div>
+   <div class="fact"><div class="lbl">Outras áreas</div><div class="v" style="color:var(--org)">${e.sup} h</div></div>
+   <div class="fact" style="grid-column:span 2"><div class="lbl">Horas por participante</div><div class="v">${e.hpp==null?na:(e.hpp<0.01?'menos de 0,01 h':d1(e.hpp)+' h')}${e.n===5?' <small>· 15.440 visitantes ao longo de 25 dias</small>':''}</div></div>
+  </div>
+  <div class="lbl" style="margin-bottom:8px">Horas por área nesta ação</div>
+  <div class="rows">${parts.map(o=>`<button class="row" data-area="${o.j}"><span class="n">${o.a}</span><span class="track"><span class="seg ${o.j?'o':'b'}" style="width:${o.v/parts[0].v*100}%"></span></span><span class="val num"><b>${o.v}</b> h · ${Math.round(o.v/e.tot*100)}%</span></button>`).join('')}</div>`);}
+function areaDetail(j){const L=E.filter(e=>e.h[j]>0).sort((a,b)=>b.h[j]-a.h[j]);
+  openDr(`<div class="dh"><div><div class="lbl">Área ${j?'de apoio':'organizadora'}</div><h2>${AREAS[j]}</h2></div><button class="x" type="button" aria-label="Fechar">✕</button></div>
+  <div class="facts"><div class="fact"><div class="lbl">Horas</div><div class="v" style="color:var(--${j?'org':'blue'})">${aTot[j]} h</div></div><div class="fact"><div class="lbl">Ações</div><div class="v">${aEv[j]} <small>de 16</small></div></div>
+  <div class="fact"><div class="lbl">Frente ao Cult Hub</div><div class="v">${j?d2(aTot[j]/aTot[0])+'×':'—'}</div></div><div class="fact"><div class="lbl">Parte das horas</div><div class="v">${Math.round(aTot[j]/T.tot*100)}%</div></div></div>
+  <div class="lbl" style="margin-bottom:8px">Onde atuou</div>
+  <div class="rows">${L.map(e=>`<button class="row" data-ev="${e.n}"><span class="n">${e.short}</span><span class="track"><span class="seg ${j?'o':'b'}" style="width:${e.h[j]/L[0].h[j]*100}%"></span></span><span class="val num"><b>${e.h[j]}</b> h</span></button>`).join('')}</div>`);}
+function bindDrill(root){root.querySelectorAll('[data-ev]').forEach(el=>el.onclick=()=>evDetail(+el.dataset.ev));root.querySelectorAll('[data-area]').forEach(el=>el.onclick=()=>areaDetail(+el.dataset.area));}
+
+/* ---------- boot ---------- */
+main.innerHTML=resumo()+tempo()+horas()+mapa()+acoes();
+bindDrill(main);
+$('#sort').onchange=e=>{sortBy=e.target.value;drawEvBars()};
+$('#hm').onchange=e=>{hMode=e.target.value;drawHeat()};
+$('#hclr').onclick=()=>{hArea=-1;drawHeat()};
+document.querySelectorAll('[data-ha]').forEach(b=>b.onclick=()=>{hArea=hArea===+b.dataset.ha?-1:+b.dataset.ha;drawHeat()});
+$('#chips').onclick=e=>{const b=e.target.closest('[data-f]');if(!b)return;fil=b.dataset.f;document.querySelectorAll('#chips .chip').forEach(c=>c.setAttribute('aria-pressed',c===b));drawAct()};
+$('#srch').oninput=e=>{q=e.target.value.trim().toLowerCase();drawAct()};
+main.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{const k=b.dataset.s;if(sk===k)sd*=-1;else{sk=k;sd=-1;if(k==='name'||k==='date')sd=1}drawAct()});
+drawEvBars();drawHeat();drawAct();show('resumo');
+$('#theme').onclick=()=>{const r=document.documentElement;const dark=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;r.dataset.theme=dark?'light':'dark'};
+</script>
+</body>
+</html>
